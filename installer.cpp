@@ -97,32 +97,35 @@ int main(int argc, char* argv[]) {
     std::string cmd = "mkdir " + root;    
     system(cmd.c_str());
     if(!checkProgram("riscv-none-elf-gcc")){
-        std::cout << "====== installing riscv-none-elf-gcc ======" << std::endl;
-        cmd = "git lfs install";
+        std::cout << "====== installing riscv-none-elf-gcc ======" << std::endl;  
+        cmd = "mkdir " + root + "/riscv-none-elf-gcc-installer";
+        system(cmd.c_str()); 
+        cmd = "git clone https://github.com/SergantDornan/riscv-none-elf-gcc-installer " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
-        cmd = "git clone https://github.com/SergantDornan/riscv-none-elf-gcc-installer " + root;
-        system(cmd.c_str());
-        cmd = "git -C " + root + " lfs pull";
-        system(cmd.c_str());
-        cmd = root + "/riscv-none-elf-gcc-installer/install";
+        cmd = root + "/riscv-none-elf-gcc-installer/install " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
         cmd = "rm -rf " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
-        std::cout << "====== riscv-none-elf-gcc installed ======" << std::endl;
     }
     if(!exists(getHomedir() + "/builder/builder")){
         std::cout << "========= installing belder =========" << std::endl;
-        cmd = "git clone https://github.com/SergantDornan/C-Cpp-builder " + root;
+        cmd = "mkdir " + root + "/C-Cpp-builder";
         system(cmd.c_str());
-        cmd = root + "/C-Cpp-builder/install";
+        cmd = "git clone https://github.com/SergantDornan/C-Cpp-builder " + root + "/C-Cpp-builder";
+        system(cmd.c_str());
+        cmd = root + "/C-Cpp-builder/install --no-make";
+        system(cmd.c_str());
+        cmd = "make -C " + root + "/C-Cpp-builder -j " + std::to_string(numThreads);
         system(cmd.c_str());
         cmd = "rm -rf " + root + "/C-Cpp-builder";
+        std::cout << "=============== builder has been installed ===============" << std::endl;
         system(cmd.c_str());
-        std::cout << "========= belder installed =========" << std::endl;
     }
     cmd = "cp -r ./ldscripts " + root;
     system(cmd.c_str());
-    cmd = "git clone https://github.com/MikronMIK32/mik32-uploader " + root;
+    cmd = "mkdir " + root + "/mik32-uploader";
+    system(cmd.c_str());
+    cmd = "git clone https://github.com/MikronMIK32/mik32-uploader " + root + "/mik32-uploader";
     system(cmd.c_str());
     cmd = "cp -r ./mik32Include " + root;
     system(cmd.c_str());
