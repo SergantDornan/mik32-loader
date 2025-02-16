@@ -18,8 +18,8 @@ g++ installer.cpp -o install # compile installer (in case you need it)
 mik32Load uninstall # uninstall mik32Loader
 ```
 # mik32Load
-you can launch loader from any folder
+you can launch loader from any directory
 
-to launch loader type "mik32Load"
+to launch loader type "mik32Load" from any directory, this directory will be passed to C-CPP-builder
 
 Everything you type after mik32Load will be passed as arguments to C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder, read about arguments there
