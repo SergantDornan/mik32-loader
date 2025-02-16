@@ -1,5 +1,25 @@
 #include "Flags.h"
 #include "essentials.h"
+void uninstall(){
+    std::string root = getHomedir() + "/mik32Loader";
+    std::string cmd = "rm -rf " + root;
+    system(cmd.c_str());
+    std::string alias = "alias mik32Load='" + root + "/loader'";
+    std::string bash = getHomedir() + "/" + ".bashrc";
+    std::string line;
+    std::vector<std::string> v;
+    std::ifstream file(bash);
+    while(std::getline(file,line)){
+        if(line != alias)
+            v.push_back(line);
+    }
+    file.close();
+    std::ofstream newfile(bash);
+    for(int i = 0; i < v.size(); ++i)
+        newfile << v[i] << std::endl;
+    newfile.close();
+    std::cout << "mik32Loader has been removed from your computer" << std::endl;
+}
 const std::string compileFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcmodel=medlow -g3 -Wall -fsigned-char -ffunction-sections -DMIK32V2";
 const std::string linkFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcmodel=medlow -g3 -Wall -fsigned-char -ffunction-sections -DMIK32V2 -Wl,-Teeprom.ld -Xlinker --gc-sections -nostartfiles -L" + root + "/ldscripts";
 const std::string elfFileName = "output.elf";
@@ -10,6 +30,10 @@ int main(int argc, char* argv[]){
 	std::vector<std::string> args;
 	for(int i = 1; i < argc; ++i)
 		args.push_back(std::string(argv[i]));
+	if(argc > 1 && std::string(argv[1]) == "uninstall"){
+		uninstall();
+		return 0;
+	}
 	bool rebuild = (find(args, "-reb") != -1 || find(args, "--rebuild") != -1);
 	std::string wd = createEssentials(rebuild);
 	std::string entryFile;
