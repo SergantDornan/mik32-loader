@@ -1,3 +1,6 @@
+# Required packages
+ca-certificates, git, make, python3, openocd, picocom
+
 # installation
 ```
 g++ installer.cpp -o install # compile installer (in case you need it)
