@@ -4,12 +4,16 @@ const std::string compileFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcm
 const std::string linkFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcmodel=medlow -g3 -Wall -fsigned-char -ffunction-sections -DMIK32V2 -Wl,-Teeprom.ld -Xlinker --gc-sections -nostartfiles -L" + root + "/ldscripts";
 const std::string elfFileName = "output.elf";
 const std::string hexFileName = "output.hex";
+const std::string Cstandart  = "-std=gnu11";
+const std::string Cppstandart = "-std=gnu++17";
 int main(int argc, char* argv[]){
 	std::vector<std::string> args;
 	for(int i = 1; i < argc; ++i)
 		args.push_back(std::string(argv[i]));
 	bool rebuild = (find(args, "-reb") != -1 || find(args, "--rebuild") != -1);
 	std::string wd = createEssentials(rebuild);
+	std::string entryFile;
+	findEntryFile(args, entryFile,cd);
 	std::string elfFile = elfFileName;
 	std::string hexFile = wd + "/" + hexFileName;
 	std::string cmd = "/home/sergantdornan/builder/builder ";
@@ -21,6 +25,8 @@ int main(int argc, char* argv[]){
 	cmd += ("// " + compileFlags + " // ");
 	cmd += ("/// " + linkFlags + " /// ");
 	cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ ");
+	if(getExt(entryFile) == "cpp") cmd += (Cppstandart + " ");
+	else cmd += (Cstandart + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;
 	system(cmd.c_str());
 	if(!exists(elfFile)){
