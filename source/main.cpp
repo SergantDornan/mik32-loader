@@ -26,6 +26,13 @@ const std::string elfFileName = "output.elf";
 const std::string hexFileName = "output.hex";
 const std::string Cstandart  = "-std=gnu11";
 const std::string Cppstandart = "-std=gnu++17";
+const std::string picocomFlags = "--omap crcrlf --echo";
+const std::vector<std::string> possibleFlags = {"-b"}; 
+
+
+// config file for project:
+// entry file
+// SERIAL_BOUDRATE
 int main(int argc, char* argv[]){
 	std::vector<std::string> args;
 	for(int i = 1; i < argc; ++i)
@@ -35,31 +42,75 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 	bool rebuild = (find(args, "-reb") != -1 || find(args, "--rebuild") != -1);
+	bool read = (find(args,"read") != -1);
 	std::string wd = createEssentials(rebuild);
-	std::string entryFile;
-	findEntryFile(args, entryFile,cd);
-	std::string elfFile = elfFileName;
+	std::string configPath = wd + "/config"; 
+	auto parameters = getParameters(args,configPath,cd);
+	std::ofstream out(configPath);
+	for(int i = 0; i < parameters.size(); ++i)
+		out << parameters[i] << std::endl;
+	std::string elfFile = wd + "/" + elfFileName;
 	std::string hexFile = wd + "/" + hexFileName;
-	std::string cmd = "/home/sergantdornan/builder/builder ";
-	for(int i = 0; i < args.size(); ++i)
-		cmd += (args[i] + " ");
+	std::string cmd = getHomedir() + "/builder/builder ";
+	for(int i = 0; i < args.size(); ++i){
+		if(find(possibleFlags, args[i]) == -1 && isFlag(args[i]) &&
+			args[i] != "-o" && args[i] != "--CC" && args[i] != "--CXX")
+			cmd += (args[i] + " ");
+	}
 	cmd += ("-o " + elfFile + " ");
 	cmd += ("-I" + root + "/mik32Include ");
 	cmd += ("-lmik32_hal -lmik32_shared ");
 	cmd += ("// " + compileFlags + " // ");
 	cmd += ("/// " + linkFlags + " /// ");
 	cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ ");
-	if(getExt(entryFile) == "cpp") cmd += (Cppstandart + " ");
+	if(getExt(parameters[0]) == "cpp") cmd += (Cppstandart + " ");
 	else cmd += (Cstandart + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;
-	system(cmd.c_str());
-	if(!exists(elfFile)){
-		std::cout << "============== mik32Loader: some error in belder ==============" << std::endl;
+	int beldercode = (system(cmd.c_str()) / 256);
+	if(!exists(elfFile))
 		return -1;
+	if(beldercode != 10){
+		cmd = "riscv-none-elf-objcopy -O ihex " + elfFile + " " + hexFile;
+		system(cmd.c_str());
+		cmd = "python3 " + root + "/mik32-uploader/mik32_upload.py " + hexFile + " --run-openocd --openocd-exec /usr/bin/openocd --openocd-target " + root + "/mik32-uploader/openocd-scripts/target/mik32.cfg --openocd-interface " + root + "/mik32-uploader/openocd-scripts/interface/ftdi/mikron-link.cfg --adapter-speed 500 --mcu-type MIK32V2";
+		system(cmd.c_str());
 	}
-	elfFile = cd + "/" + elfFileName;
-	cmd = "riscv-none-elf-objcopy -O ihex " + elfFile + " " + hexFile;
-	system(cmd.c_str());
-	cmd = "python3 " + root + "/mik32-uploader/mik32_upload.py " + hexFile + " --run-openocd --openocd-exec /usr/bin/openocd --openocd-target " + root + "/mik32-uploader/openocd-scripts/target/mik32.cfg --openocd-interface " + root + "/mik32-uploader/openocd-scripts/interface/ftdi/mikron-link.cfg --adapter-speed 500 --mcu-type MIK32V2";
-	system(cmd.c_str());
+	else
+		std::cout << "mik32Loader: nothing to upload" << std::endl;
+	if(read){
+		std::cout << "================ Launching picocom ================" << std::endl;
+		auto devDir = getDirs("/dev");
+		std::vector<std::string> USBports;
+		cmd = "sudo picocom ";
+		for(int i = 1; i < devDir.size(); ++i){
+			if(devDir[i].find("/dev/ttyUSB") != std::string::npos)
+				USBports.push_back(devDir[i]);
+		}
+		if(USBports.size() == 0){
+			std::cout << std::endl;
+			std::cout << "=================== ERROR ===================" << std::endl;
+			std::cout << "Cannot find active USB port" << std::endl;
+			std::cout << "Have you connected your device?" << std::endl;
+			return -1;
+		}
+		else if(USBports.size() == 1){
+			std::cout << "Assumed USB port: " << getName(USBports[0]) << std::endl;
+			cmd += (USBports[0] + " ");
+		}
+		else{
+			std::cout << "Multiple USB ports found" << std::endl;
+			std::cout << "Specify USB port number (type 0/1/2...)" << std::endl;
+			std::string port = "";
+			while(!exists("/dev/ttyUSB" + port)){
+				if(port != "") 
+					std::cout << "ERROR: cannot find this USB port, try again:" << std::endl;
+				std::cin >> port;
+			}
+			cmd += ("/dev/ttyUSB" + port + " ");
+		}
+		cmd += ("-b " + parameters[1] + " ");
+		cmd += picocomFlags;
+		system(cmd.c_str());
+	}
+	return 0;
 }

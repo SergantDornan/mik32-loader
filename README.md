@@ -22,4 +22,16 @@ you can launch loader from any directory
 
 to launch loader type "mik32Load" from any directory, this directory will be passed to C-CPP-builder
 
-Everything you type after mik32Load will be passed as arguments to C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder, read about arguments there
+the mik32Loader remembers the latest settings and the entered flags, so if you just enter a command without flags or arguments, the build will go the same way as the last time
+
+Type "read" in any place after "mik32Load" to launch picocom and enable terminal output:
+
+```
+mik32Load read # launching picocom
+```
+
+# Flags
+
+-b [number] specify SERIAL_BOUDRATE for picocom
+
+Every flag not listed above (except "-o, --CC, --CXX") will be passed as arguments to C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder, read about arguments there

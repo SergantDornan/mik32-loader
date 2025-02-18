@@ -26,12 +26,7 @@ std::vector<std::string> getParameters(const std::vector<std::string>& args,
 	while(std::getline(in, line)) parameters.push_back(line);
 	in.close();
 	findEntryFile(args,parameters[0],cd);
-	std::string CC = "default", CXX = "default";
-	getNameAfterFlag(args, "--CC", CC);
-	getNameAfterFlag(args, "--CXX", CXX);
-	parameters[5] = (CC + " " + CXX);
-	getNameAfterFlag(args, "-o", parameters[1]);
-	getIdirs(args, parameters[6]);
+	getNameAfterFlag(args, "-b", parameters[1]);
 	return parameters;
 }
 void getIdirs(const std::vector<std::string>& args, std::string& s){
@@ -73,7 +68,7 @@ void getIdirs(const std::vector<std::string>& args, std::string& s){
 void findEntryFile(const std::vector<std::string>& args, std::string& s,
 	const std::string& cd){
 	if(args.size() != 0 && args[0] != "run" && args[0] != "config" && 
-		args[0] != "status" && !isFlag(args[0])){
+		args[0] != "status" && args[0] != "read" && !isFlag(args[0])){
 
 		std::string mainFile = findFile(args[0], cd);
 		if(mainFile == "-1"){

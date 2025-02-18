@@ -74,9 +74,7 @@ bool checkProgram(const std::string& programName) {
 bool exists(const std::string& path){
 	return std::filesystem::exists(path);
 }
-bool isRunningAsRoot() {
-  return geteuid() == 0;
-}
+
 const std::string root = getHomedir() + "/" + mainDir;
 const std::vector<std::string> reqPacks = {"ca-certificates", "git", "make",
  "python3", "openocd", "picocom"};

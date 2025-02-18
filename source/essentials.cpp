@@ -106,12 +106,7 @@ std::string createEssentials(const bool reb){
 		std::string cmd = "touch " + folder + "/" + configFile;
 		std::ofstream out(folder + "/" + configFile);
 		out << "-1" << std::endl;
-		out << "out" << std::endl;
-		out << "-1" << std::endl;
-		out << "-1" << std::endl;
-		out << "-1" << std::endl;
-		out << "default default" << std::endl;
-		out << "-1" << std::endl;
+		out << "115200" << std::endl;
 		out.close();
 		system(cmd.c_str());
 	}
