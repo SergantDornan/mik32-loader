@@ -125,11 +125,13 @@ int main(int argc, char* argv[]) {
     system(cmd.c_str());
     cmd = "git clone https://github.com/MikronMIK32/mik32-uploader " + root + "/mik32-uploader";
     system(cmd.c_str());
-    cmd = "cp -r ./mik32Include " + root;
+    cmd = "cp -r ./hardware " + root;
     system(cmd.c_str());
-    cmd = "cp libmik32_hal.a " + root + "/mik32Include";
+    cmd = "mkdir " + root + "/CompiledLibs";
     system(cmd.c_str());
-    cmd = "cp libmik32_shared.a " + root + "/mik32Include";
+    cmd = "cp libmik32_hal.a " + root + "/CompiledLibs";
+    system(cmd.c_str());
+    cmd = "cp libmik32_shared.a " + root + "/CompiledLibs";
     system(cmd.c_str());
     std::ifstream makefile("./Makefile");
     std::vector<std::string> lines;

@@ -27,12 +27,17 @@ const std::string hexFileName = "output.hex";
 const std::string Cstandart  = "-std=gnu11";
 const std::string Cppstandart = "-std=gnu++17";
 const std::string picocomFlags = "--omap crcrlf --echo";
-const std::vector<std::string> possibleFlags = {"-b"}; 
+const std::vector<std::string> IncFolders = {root + "/hardware/mik32-hal/core/Include",
+root + "/hardware/mik32-hal/peripherals/Include", root + "/hardware/mik32-hal/utilities/Include",
+root + "/hardware/mik32v2-shared/include", root + "/hardware/mik32v2-shared/libs",
+root + "/hardware/mik32v2-shared/periphery", root + "/CompiledLibs"};
+const std::vector<std::string> possibleFlags = {"-b", "-p"}; 
 
 
 // config file for project:
 // entry file
 // SERIAL_BOUDRATE
+// USB port for picocom
 int main(int argc, char* argv[]){
 	std::vector<std::string> args;
 	for(int i = 1; i < argc; ++i)
@@ -58,7 +63,8 @@ int main(int argc, char* argv[]){
 			cmd += (args[i] + " ");
 	}
 	cmd += ("-o " + elfFile + " ");
-	cmd += ("-I" + root + "/mik32Include ");
+	for(int i = 0; i < IncFolders.size(); ++i)
+		cmd += ("-I" + IncFolders[i] + " ");
 	cmd += ("-lmik32_hal -lmik32_shared ");
 	cmd += ("// " + compileFlags + " // ");
 	cmd += ("/// " + linkFlags + " /// ");
@@ -94,19 +100,12 @@ int main(int argc, char* argv[]){
 			return -1;
 		}
 		else if(USBports.size() == 1){
-			std::cout << "Assumed USB port: " << getName(USBports[0]) << std::endl;
+			std::cout << "Single USB port found: " << USBports[0] << std::endl;
 			cmd += (USBports[0] + " ");
 		}
 		else{
-			std::cout << "Multiple USB ports found" << std::endl;
-			std::cout << "Specify USB port number (type 0/1/2...)" << std::endl;
-			std::string port = "";
-			while(!exists("/dev/ttyUSB" + port)){
-				if(port != "") 
-					std::cout << "ERROR: cannot find this USB port, try again:" << std::endl;
-				std::cin >> port;
-			}
-			cmd += ("/dev/ttyUSB" + port + " ");
+			std::cout << "Entered USB port: /dev/ttyUSB" << parameters[2] << std::endl;
+			cmd += ("/dev/ttyUSB" + parameters[2] + " ");
 		}
 		cmd += ("-b " + parameters[1] + " ");
 		cmd += picocomFlags;

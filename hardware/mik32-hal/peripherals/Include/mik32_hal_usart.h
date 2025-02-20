@@ -1,6 +1,3 @@
-#ifndef MIK32_USART
-#define MIK32_USART
-
 #include "mik32_hal_pcc.h"
 #include "mik32_hal_gpio.h"
 #include <stdbool.h>
@@ -225,11 +222,11 @@ typedef struct __SettingTypeDef
 
 } USART_HandleTypeDef;
 
-static inline __attribute__((always_inline)) void __HAL_USART_Enable(USART_HandleTypeDef* local)
+inline void __HAL_USART_Enable(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_UE_M;
 }
-static inline __attribute__((always_inline)) void __HAL_USART_Disable(USART_HandleTypeDef* local)
+inline void __HAL_USART_Disable(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_UE_M;
 }
@@ -237,90 +234,90 @@ static inline __attribute__((always_inline)) void __HAL_USART_Disable(USART_Hand
 /**
  * @brief Разрешить прерывания по признаку ошибки бита четности
  */
-static inline __attribute__((always_inline)) void HAL_USART_PE_EnableInterrupt(USART_HandleTypeDef* local)       
+inline void HAL_USART_PE_EnableInterrupt(USART_HandleTypeDef* local)       
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_PEIE_M;
 }
 /**
  * @brief Запретить прерывания по признаку ошибки бита четности
  */
-static inline __attribute__((always_inline)) void HAL_USART_PE_DisableInterrupt(USART_HandleTypeDef* local)      
+inline void HAL_USART_PE_DisableInterrupt(USART_HandleTypeDef* local)      
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_PEIE_M;
 }
 /**
  * @brief Разрешить прерывания по признаку "регистр передатчика пуст"
  */
-static inline __attribute__((always_inline)) void HAL_USART_TXE_EnableInterrupt(USART_HandleTypeDef* local)      
+inline void HAL_USART_TXE_EnableInterrupt(USART_HandleTypeDef* local)      
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_TXEIE_M;
 }
 /**
  * @brief Запретить прерывания по признаку "регистр передатчика пуст"
  */
-static inline __attribute__((always_inline)) void HAL_USART_TXE_DisableInterrupt(USART_HandleTypeDef* local)     
+inline void HAL_USART_TXE_DisableInterrupt(USART_HandleTypeDef* local)     
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_TXEIE_M;
 }
 /**
  * @brief Разрешить прерывания по признаку "передача завершена"
  */
-static inline __attribute__((always_inline)) void HAL_USART_TXC_EnableInterrupt(USART_HandleTypeDef* local)      
+inline void HAL_USART_TXC_EnableInterrupt(USART_HandleTypeDef* local)      
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_TCIE_M;
 }
 /* Запретить прерывания по признаку "передача завершена" */
-static inline __attribute__((always_inline)) void HAL_USART_TXC_DisableInterrupt(USART_HandleTypeDef* local)     
+inline void HAL_USART_TXC_DisableInterrupt(USART_HandleTypeDef* local)     
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_TCIE_M;
 }
 /* Разрешить прерывания по признаку "регистр приемника не пуст" */
-static inline __attribute__((always_inline)) void HAL_USART_RXNE_EnableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RXNE_EnableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_RXNEIE_M;
 }
 /* Запретить прерывания по признаку "регистр приемника не пуст" */
-static inline __attribute__((always_inline)) void HAL_USART_RXNE_DisableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RXNE_DisableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_RXNEIE_M;
 }
 /* Разрешить прерывания по признаку "активность на линии RX не обнаружена в течение 8 битовых тактов" */
-static inline __attribute__((always_inline)) void HAL_USART_IDLE_EnableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_IDLE_EnableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 |= UART_CONTROL1_IDLEIE_M;
 }
 /* Запретить прерывания по признаку "активность на линии RX не обнаружена в течение 8 битовых тактов" */
-static inline __attribute__((always_inline)) void HAL_USART_IDLE_DisableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_IDLE_DisableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL1 &= ~UART_CONTROL1_IDLEIE_M;
 }
 /* Разрешить прерывания при обнаружении break-состояния на линии RX */
-static inline __attribute__((always_inline)) void HAL_USART_RX_Break_EnableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RX_Break_EnableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL2 |= UART_CONTROL2_LBDIE_M;
 }
 /* Запретить прерывания при обнаружении break-состояния на линии RX */
-static inline __attribute__((always_inline)) void HAL_USART_RX_Break_DisableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RX_Break_DisableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL2 &= ~UART_CONTROL2_LBDIE_M;
 }
 /* Разрешить прерывания при изменени уровня линии CTS */
-static inline __attribute__((always_inline)) void HAL_USART_CTS_EnableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_CTS_EnableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL3 |= UART_CONTROL3_CTSIE_M;
 }
 /* Запретить прерывания при изменени уровня линии CTS */
-static inline __attribute__((always_inline)) void HAL_USART_CTS_DisableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_CTS_DisableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL3 &= ~UART_CONTROL3_CTSIE_M;
 }
 /* Разрешить прерывания при обнаружении ошибки приема данных (FE, ORE, NF) */
-static inline __attribute__((always_inline)) void HAL_USART_RX_Error_EnableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RX_Error_EnableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL3 |= UART_CONTROL3_EIE_M;
 }
 /* Запретить прерывания при обнаружении ошибки приема данных (FE, ORE, NF) */
-static inline __attribute__((always_inline)) void HAL_USART_RX_Error_DisableInterrupt(USART_HandleTypeDef* local)
+inline void HAL_USART_RX_Error_DisableInterrupt(USART_HandleTypeDef* local)
 {
     local->Instance->CONTROL3 &= ~UART_CONTROL3_EIE_M;
 }
@@ -332,7 +329,7 @@ static inline __attribute__((always_inline)) void HAL_USART_RX_Error_DisableInte
  * @param data 1 байт отправляемых данных
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_WriteByte(USART_HandleTypeDef* local, char data)
+inline void HAL_USART_WriteByte(USART_HandleTypeDef* local, char data)
 {
     local->Instance->TXDATA = data;
 }
@@ -342,7 +339,7 @@ static inline __attribute__((always_inline)) void HAL_USART_WriteByte(USART_Hand
  * @param local указатель на структуру-дескриптор модуля USART
  * @return 1 байт принятых данных
  */
-static inline __attribute__((always_inline)) char HAL_USART_ReadByte(USART_HandleTypeDef* local)
+inline char HAL_USART_ReadByte(USART_HandleTypeDef* local)
 {
     return local->Instance->RXDATA;
 }
@@ -352,7 +349,7 @@ static inline __attribute__((always_inline)) char HAL_USART_ReadByte(USART_Handl
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_CTS_ClearToggleFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_CTS_ClearToggleFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_CTSIF_M;
 }
@@ -362,7 +359,7 @@ static inline __attribute__((always_inline)) void HAL_USART_CTS_ClearToggleFlag(
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_RX_ClearBreakFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_RX_ClearBreakFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_LBDF_M;
 }
@@ -372,7 +369,7 @@ static inline __attribute__((always_inline)) void HAL_USART_RX_ClearBreakFlag(US
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_TXC_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_TXC_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_TC_M;
 }
@@ -382,7 +379,7 @@ static inline __attribute__((always_inline)) void HAL_USART_TXC_ClearFlag(USART_
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_TXE_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_TXE_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_TXE_M;
 }
@@ -392,7 +389,7 @@ static inline __attribute__((always_inline)) void HAL_USART_TXE_ClearFlag(USART_
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_RXNE_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_RXNE_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_RXNE_M;
 }
@@ -404,7 +401,7 @@ static inline __attribute__((always_inline)) void HAL_USART_RXNE_ClearFlag(USART
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_IDLE_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_IDLE_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_IDLE_M;
 }
@@ -415,7 +412,7 @@ static inline __attribute__((always_inline)) void HAL_USART_IDLE_ClearFlag(USART
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_ReceiveOverwrite_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_ReceiveOverwrite_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_ORE_M;
 }
@@ -426,7 +423,7 @@ static inline __attribute__((always_inline)) void HAL_USART_ReceiveOverwrite_Cle
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_NF_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_NF_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_NF_M;
 }
@@ -437,7 +434,7 @@ static inline __attribute__((always_inline)) void HAL_USART_NF_ClearFlag(USART_H
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_StopBitError_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_StopBitError_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_FE_M;
 }
@@ -448,7 +445,7 @@ static inline __attribute__((always_inline)) void HAL_USART_StopBitError_ClearFl
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_ParityError_ClearFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_ParityError_ClearFlag(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS |= UART_FLAGS_PE_M;
 }
@@ -459,7 +456,7 @@ static inline __attribute__((always_inline)) void HAL_USART_ParityError_ClearFla
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_ClearFlags(USART_HandleTypeDef* local)
+inline void HAL_USART_ClearFlags(USART_HandleTypeDef* local)
 {
     local->Instance->FLAGS = 0xFFFFFFFF;
 }
@@ -470,7 +467,7 @@ static inline __attribute__((always_inline)) void HAL_USART_ClearFlags(USART_Han
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_DCD_ClearToggleFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_DCD_ClearToggleFlag(USART_HandleTypeDef* local)
 {
     local->Instance->MODEM |= UART_MODEM_DCDIF_M;
 }
@@ -481,7 +478,7 @@ static inline __attribute__((always_inline)) void HAL_USART_DCD_ClearToggleFlag(
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_RI_ClearToggleFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_RI_ClearToggleFlag(USART_HandleTypeDef* local)
 {
     local->Instance->MODEM |= UART_MODEM_RIIF_M;
 }
@@ -492,7 +489,7 @@ static inline __attribute__((always_inline)) void HAL_USART_RI_ClearToggleFlag(U
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_DSR_ClearToggleFlag(USART_HandleTypeDef* local)
+inline void HAL_USART_DSR_ClearToggleFlag(USART_HandleTypeDef* local)
 {
     local->Instance->MODEM |= UART_MODEM_DSRIF_M;
 }
@@ -502,7 +499,7 @@ static inline __attribute__((always_inline)) void HAL_USART_DSR_ClearToggleFlag(
  * @param local указатель на структуру-дескриптор модуля USART
  * @return none
  */
-static inline __attribute__((always_inline)) void HAL_USART_ClearModemFlags(USART_HandleTypeDef* local)
+inline void HAL_USART_ClearModemFlags(USART_HandleTypeDef* local)
 {
     local->Instance->MODEM |= (UART_MODEM_DCDIF_M | UART_MODEM_RIIF_M | UART_MODEM_DSRIF_M);
 }
@@ -542,5 +539,3 @@ bool HAL_USART_DSR_ReadToggleFlag(USART_HandleTypeDef* local);
 // void HAL_USART_PrintBefore(USART_HandleTypeDef* local, char* str);
 // void HAL_USART_Print_c(USART_HandleTypeDef* local, char value);
 // void HAL_USART_Print_s(USART_HandleTypeDef* local, char* str);
-
-#endif /* MIK32_USART */

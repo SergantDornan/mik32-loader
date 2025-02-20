@@ -27,6 +27,7 @@ std::vector<std::string> getParameters(const std::vector<std::string>& args,
 	in.close();
 	findEntryFile(args,parameters[0],cd);
 	getNameAfterFlag(args, "-b", parameters[1]);
+	getNameAfterFlag(args,"-p",parameters[2]);
 	return parameters;
 }
 void getIdirs(const std::vector<std::string>& args, std::string& s){

@@ -1,37 +1,39 @@
-# Required packages
+# Необходимые пакеты
 ca-certificates, git, make, python3, openocd, picocom
 
-# installation
+# Установка
 ```
-g++ installer.cpp -o install # compile installer (in case you need it)
-```
-
-```
-./install # install mik32Loader
+g++ installer.cpp -o install # скомпилировать установщик (если надо)
 ```
 
 ```
-./install reinstall # reinstall mik32Loader 
+./install # установить mik32Loader
 ```
 
 ```
-mik32Load uninstall # uninstall mik32Loader
+./install reinstall # переустановить mik32Loader
+```
+
+```
+mik32Load uninstall # удалить mik32Loader
 ```
 # mik32Load
-you can launch loader from any directory
+mik32Loader можно вызвать из любой директории
 
-to launch loader type "mik32Load" from any directory, this directory will be passed to C-CPP-builder
+Чтобы запустить mik32Loader просто введите "mik32Load", находясь в любой директории, затем эта директория будет передана программе C-CPP-builder
 
-the mik32Loader remembers the latest settings and the entered flags, so if you just enter a command without flags or arguments, the build will go the same way as the last time
+mik32Loader запоминает последние введенные флаги, так что если запустить программу без аргументов, сборка пройдет так же, как в прошлый раз
 
-Type "read" in any place after "mik32Load" to launch picocom and enable terminal output:
+Напишите "read" в лююбом месте после "mik32Load" чтобы запустить picocom и посмотреть что контроллер выводит в терминал:
 
 ```
-mik32Load read # launching picocom
+mik32Load read # запуск picocom
 ```
 
 # Flags
 
--b [number] specify SERIAL_BOUDRATE for picocom
+-b [число] явно указать SERIAL_BOUDRATE для picocom
 
-Every flag not listed above (except "-o, --CC, --CXX") will be passed as arguments to C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder, read about arguments there
+-p [число] указать номер USB порта для picocom 
+
+Любой флаг не указаный выше (кроме "-o, --CC, --CXX") будет передан как аргумент программе C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder

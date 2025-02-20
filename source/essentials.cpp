@@ -12,7 +12,8 @@ std::string createEssentials(const bool reb){
 	if(!isConfig){
 		for(int i = 1; i < mainDirs.size(); ++i){
 			if(std::filesystem::is_directory(mainDirs[i]) && getName(mainDirs[i]) != "ldscripts" &&
-				getName(mainDirs[i]) != "mik32-uploader" && getName(mainDirs[i]) != "mik32Include"){
+				getName(mainDirs[i]) != "mik32-uploader" && getName(mainDirs[i]) != "hardware" && 
+				getName(mainDirs[i]) != "CompiledLibs"){
 				std::string cmd = "rm -rf " + mainDirs[i];
 				system(cmd.c_str()); 
  			}
@@ -107,6 +108,7 @@ std::string createEssentials(const bool reb){
 		std::ofstream out(folder + "/" + configFile);
 		out << "-1" << std::endl;
 		out << "115200" << std::endl;
+		out << "0" << std::endl;
 		out.close();
 		system(cmd.c_str());
 	}
