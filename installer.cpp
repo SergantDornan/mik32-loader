@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         system(cmd.c_str()); 
         cmd = "git clone https://github.com/SergantDornan/riscv-none-elf-gcc-installer " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
-        cmd = root + "/riscv-none-elf-gcc-installer/install " + root + "/riscv-none-elf-gcc-installer";
+        cmd = "make -C " + root + "/riscv-none-elf-gcc-installer install -j " + std::to_string(numThreads);
         system(cmd.c_str());
         cmd = "rm -rf " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
