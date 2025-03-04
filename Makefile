@@ -1,4 +1,4 @@
-OUTPUT=
+OUTPUT=/home/sergantdornan/mik32Loader/loader
 INSTALLOUTPUT=./installer
 INCDIR=./include
 SOURCEDIR=./source
@@ -26,7 +26,7 @@ $(OUTPUT):$(OBJECTS)
 	$(CPPC) $^ -o $@
 
 mrproper:
-	rm -rf $(OBJECTS) $(DEPFILES) $(INSTALLOBJECTS)
+	rm -rf $(OBJECTS) $(DEPFILES) $(INSTALLOBJECTS) $(INSTALLOUTPUT)
 
 $(deps)/%.o:$(SOURCEDIR)/%.cpp
 	$(CPPC) $(CFLAGS) $(foreach D,$(INCDIR),-I$(D)) -c $< -o $@
