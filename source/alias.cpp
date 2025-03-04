@@ -60,7 +60,7 @@ void removeAlias(const std::string& alias, const std::string& cmd){
     	std::ifstream file(config[i]);
     	while(std::getline(file,l)){
         	if(l != line)
-            	v.push_back(line);
+            	v.push_back(l);
     	}
     	file.close();
     	std::ofstream newfile(config[i]);

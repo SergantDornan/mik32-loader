@@ -8,14 +8,9 @@ bool checkProgram(const std::string& programName) {
     int result = system(command.c_str());
     return result == 0;
 }
-const std::vector<std::string> reqPacks = {"ca-certificates", "git", "make",
- "python3", "openocd", "picocom"};
 int main(int argc, char* argv[]) {
     if(argc >= 2 && std::string(argv[1]) == "reinstall")
         uninstall();
-    std::cout << "!!!!!!! Required packages: !!!!!" << std::endl;
-    for(int i = 0;i < reqPacks.size(); ++i)
-        std::cout << reqPacks[i] << " ";
     std::cout << std::endl;
     if(exists(root)){
     	std::cout << "====================== ERROR ======================" << std::endl;
