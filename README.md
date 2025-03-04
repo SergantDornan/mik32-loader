@@ -3,15 +3,11 @@ ca-certificates, git, make, python3, openocd, picocom
 
 # Установка
 ```
-g++ installer.cpp -o install # скомпилировать установщик (если надо)
+make install # установка
 ```
 
 ```
-./install # установить mik32Loader
-```
-
-```
-./install reinstall # переустановить mik32Loader
+./installer reinstall # переустановить mik32Loader
 ```
 
 ```

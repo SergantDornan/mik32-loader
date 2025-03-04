@@ -1,81 +1,13 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdlib> 
-#include <unistd.h>
-#include <limits.h>
-#include <pwd.h>
-#include <filesystem>
-#include <fstream>
+#include "BuilderFilework.h"
+#include "uninstall.h"
+#include "alias.h"
 #include <thread>
 const size_t numThreads = std::thread::hardware_concurrency();
-//sudo apt update
-//sudo apt install -y --no-install-recommends ca-certificates git make python3 openocd picocom
-const std::string mainDir = "mik32Loader";
-std::string getHomedir(){
-    const char* homeDir = getenv("HOME");
-    if (homeDir) {
-        return homeDir;
-    } else {
-        std::cout << "======================== ERROR ========================" << std::endl;
-        std::cout << "==== some error in installer.cpp: getHomedir() ====" << std::endl;
-        std::cout << std::endl;      
-        return "";
-    }
-}
-void uninstall(){
-    std::string root = getHomedir() + "/" + mainDir;
-    std::string cmd = "rm -rf " + root;
-    system(cmd.c_str());
-    std::string alias = "alias mik32Load='" + root + "/loader'";
-    std::string bash = getHomedir() + "/" + ".bashrc";
-    std::string line;
-    std::vector<std::string> v;
-    std::ifstream file(bash);
-    while(std::getline(file,line)){
-        if(line != alias)
-            v.push_back(line);
-    }
-    file.close();
-    std::ofstream newfile(bash);
-    for(int i = 0; i < v.size(); ++i)
-        newfile << v[i] << std::endl;
-    newfile.close();
-    std::cout << "mik32Loader has been removed from your computer" << std::endl;
-}
-std::vector<std::string> getDirs(const std::string &path) {
-	std::vector<std::string> dirs;
-	if(!std::filesystem::is_directory(path)){
-		std::cout << "======================= ERROR =======================" << std::endl;
-		std::cout << "=============== installer.cpp: getDirs ===============" << std::endl;
-		std::cout << "path leads to a file, not directory" << std::endl;
-		std::cout << path << std::endl;
-		std::cout << "=====================================================" << std::endl;
-		return dirs;
-	}
-  std::string back = path;
-  while (back.back() != '/')
-    {
-      back.pop_back();
-    }
-  back.pop_back();
-  dirs = {back};
-  for (const std::filesystem::directory_entry &dir : std::filesystem::directory_iterator(path))
-    {
-      dirs.push_back(dir.path().string());
-    }
-  return dirs;
-}
 bool checkProgram(const std::string& programName) {
     std::string command = "which " + programName + " > /dev/null 2>&1";
     int result = system(command.c_str());
     return result == 0;
 }
-bool exists(const std::string& path){
-	return std::filesystem::exists(path);
-}
-
-const std::string root = getHomedir() + "/" + mainDir;
 const std::vector<std::string> reqPacks = {"ca-certificates", "git", "make",
  "python3", "openocd", "picocom"};
 int main(int argc, char* argv[]) {
@@ -94,7 +26,8 @@ int main(int argc, char* argv[]) {
     }
     std::string cmd = "mkdir " + root;    
     system(cmd.c_str());
-    if(!checkProgram("riscv-none-elf-gcc")){
+    if(!checkProgram("riscv-none-elf-gcc") && 
+        !exists(getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-gcc")){
         std::cout << "====== installing riscv-none-elf-gcc ======" << std::endl;  
         cmd = "mkdir " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str()); 
@@ -104,6 +37,12 @@ int main(int argc, char* argv[]) {
         system(cmd.c_str());
         cmd = "rm -rf " + root + "/riscv-none-elf-gcc-installer";
         system(cmd.c_str());
+        if(!exists(getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-gcc")){
+            std::cout << "================== ERROR ==================" << std::endl;
+            std::cout << "Something wrong with riscv-none-elf-gcc installation" << std::endl;
+            std::cout << "riscv-none-elf-gcc is not installed" << std::endl;
+            return -1;
+        }
     }
     if(!exists(getHomedir() + "/builder/builder")){
         std::cout << "========= installing belder =========" << std::endl;
@@ -111,13 +50,16 @@ int main(int argc, char* argv[]) {
         system(cmd.c_str());
         cmd = "git clone https://github.com/SergantDornan/C-Cpp-builder " + root + "/C-Cpp-builder";
         system(cmd.c_str());
-        cmd = root + "/C-Cpp-builder/install --no-make";
-        system(cmd.c_str());
-        cmd = "make -C " + root + "/C-Cpp-builder -j " + std::to_string(numThreads);
+        cmd = "make -C " + root + "/C-Cpp-builder/ install -j " + std::to_string(numThreads);
         system(cmd.c_str());
         cmd = "rm -rf " + root + "/C-Cpp-builder";
-        std::cout << "=============== builder has been installed ===============" << std::endl;
         system(cmd.c_str());
+        if(!exists(getHomedir() + "/builder/builder")){
+            std::cout << "================== ERROR ==================" << std::endl;
+            std::cout << "Something wrong with builder installation" << std::endl;
+            std::cout << "Builder is not installed" << std::endl;
+            return -1;
+        }
     }
     cmd = "cp -r ./ldscripts " + root;
     system(cmd.c_str());
@@ -133,7 +75,7 @@ int main(int argc, char* argv[]) {
     system(cmd.c_str());
     cmd = "cp libmik32_shared.a " + root + "/CompiledLibs";
     system(cmd.c_str());
-    std::ifstream makefile("./Makefile");
+    std::ifstream makefile(cd + "/Makefile");
     std::vector<std::string> lines;
     std::string line;
     std::getline(makefile,line);
@@ -145,18 +87,13 @@ int main(int argc, char* argv[]) {
     }
     makefile.close();
     if(lines.size() > 1){
-        std::ofstream out("./Makefile");
+        std::ofstream out(cd + "/Makefile");
         for(int i = 0; i < lines.size(); ++i)
             out << lines[i] << std::endl;
         out.close();
     }
-    std::string bash = getHomedir() + "/" + ".bashrc";
-    std::string alias = "alias mik32Load='" + root + "/loader'";
-    std::ofstream bshrc(bash, std::ios::app);
-    bshrc << alias << std::endl;
-    bshrc.close();
-    system(alias.c_str());
-    cmd = "make -j " + std::to_string(numThreads);
+    addAlias("mik32Load", root + "/loader");
+    cmd = "make -C "+cd+" -j " + std::to_string(numThreads);
     system(cmd.c_str());
     if(exists(root + "/loader"))
         std::cout << "================= mik32Loader has been installed =================" << std::endl;

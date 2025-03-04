@@ -1,37 +1,7 @@
 #include "Flags.h"
 #include "essentials.h"
-void uninstall(){
-    std::string root = getHomedir() + "/mik32Loader";
-    std::string cmd = "rm -rf " + root;
-    system(cmd.c_str());
-    std::string alias = "alias mik32Load='" + root + "/loader'";
-    std::string bash = getHomedir() + "/" + ".bashrc";
-    std::string line;
-    std::vector<std::string> v;
-    std::ifstream file(bash);
-    while(std::getline(file,line)){
-        if(line != alias)
-            v.push_back(line);
-    }
-    file.close();
-    std::ofstream newfile(bash);
-    for(int i = 0; i < v.size(); ++i)
-        newfile << v[i] << std::endl;
-    newfile.close();
-    std::cout << "mik32Loader has been removed from your computer" << std::endl;
-}
-const std::string compileFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcmodel=medlow -g3 -Wall -fsigned-char -ffunction-sections -DMIK32V2";
-const std::string linkFlags = "-march=rv32imc_zicsr_zifencei -mabi=ilp32 -mcmodel=medlow -g3 -Wall -fsigned-char -ffunction-sections -DMIK32V2 -Wl,-Teeprom.ld -Xlinker --gc-sections -nostartfiles -L" + root + "/ldscripts";
-const std::string elfFileName = "output.elf";
-const std::string hexFileName = "output.hex";
-const std::string Cstandart  = "-std=gnu11";
-const std::string Cppstandart = "-std=gnu++17";
-const std::string picocomFlags = "--omap crcrlf --echo";
-const std::vector<std::string> IncFolders = {root + "/hardware/mik32-hal/core/Include",
-root + "/hardware/mik32-hal/peripherals/Include", root + "/hardware/mik32-hal/utilities/Include",
-root + "/hardware/mik32v2-shared/include", root + "/hardware/mik32v2-shared/libs",
-root + "/hardware/mik32v2-shared/periphery", root + "/CompiledLibs"};
-const std::vector<std::string> possibleFlags = {"-b", "-p"}; 
+#include "constants.h"
+#include "uninstall.h"
 
 
 // config file for project:
@@ -68,7 +38,10 @@ int main(int argc, char* argv[]){
 	cmd += ("-lmik32_hal -lmik32_shared ");
 	cmd += ("// " + compileFlags + " // ");
 	cmd += ("/// " + linkFlags + " /// ");
-	cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ ");
+	if(!exists(Compilers[0]) || !exists(Compilers[1]))
+		cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ ");
+	else
+		cmd += ("--CC " + Compilers[0] + " --CXX " + Compilers[1] + " ");
 	if(getExt(parameters[0]) == "cpp") cmd += (Cppstandart + " ");
 	else cmd += (Cstandart + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;
@@ -76,7 +49,10 @@ int main(int argc, char* argv[]){
 	if(!exists(elfFile))
 		return -1;
 	if(beldercode != 10){
-		cmd = "riscv-none-elf-objcopy -O ihex " + elfFile + " " + hexFile;
+		if(exists(Compilers[2]))
+			cmd = Compilers[2] + " -O ihex " + elfFile + " " + hexFile;
+		else
+			cmd = "riscv-none-elf-objcopy -O ihex " + elfFile + " " + hexFile;
 		system(cmd.c_str());
 		cmd = "python3 " + root + "/mik32-uploader/mik32_upload.py " + hexFile + " --run-openocd --openocd-exec /usr/bin/openocd --openocd-target " + root + "/mik32-uploader/openocd-scripts/target/mik32.cfg --openocd-interface " + root + "/mik32-uploader/openocd-scripts/interface/ftdi/mikron-link.cfg --adapter-speed 500 --mcu-type MIK32V2";
 		system(cmd.c_str());
