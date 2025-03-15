@@ -56,13 +56,15 @@ int main(int argc, char* argv[]) {
             return -1;
         }
     }
-    cmd = "cp -r ./ldscripts " + root;
+    cmd = "cp -r " + cd + "/ldscripts " + root;
     system(cmd.c_str());
-    cmd = "mkdir " + root + "/mik32-uploader";
+    cmd = "cp -r " + cd + "/mik32-uploader " + root;
     system(cmd.c_str());
-    cmd = "git clone https://github.com/MikronMIK32/mik32-uploader " + root + "/mik32-uploader";
-    system(cmd.c_str());
-    cmd = "cp -r ./hardware " + root;
+    // cmd = "mkdir " + root + "/mik32-uploader";
+    // system(cmd.c_str());
+    // cmd = "git clone https://github.com/MikronMIK32/mik32-uploader " + root + "/mik32-uploader";
+    // system(cmd.c_str());
+    cmd = "cp -r " + cd + "/hardware " + root;
     system(cmd.c_str());
     cmd = "mkdir " + root + "/CompiledLibs";
     system(cmd.c_str());
