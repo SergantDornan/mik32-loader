@@ -28,9 +28,10 @@ int main(int argc, char* argv[]){
 	std::string hexFile = wd + "/" + hexFileName;
 	std::string cmd = getHomedir() + "/builder/builder ";
 	for(int i = 0; i < args.size(); ++i){
-		if(find(possibleFlags, args[i]) == -1 && isFlag(args[i]) &&
-			args[i] != "-o" && args[i] != "--CC" && args[i] != "--CXX")
-			cmd += (args[i] + " ");
+		if(find(possibleFlags, args[i]) == -1){
+			if(isFlag(args[i]) || (i > 0 && find(possibleFlags,args[i-1]) == -1))
+				cmd += (args[i] + " ");
+		}
 	}
 	cmd += ("-o " + elfFile + " ");
 	for(int i = 0; i < IncFolders.size(); ++i)
@@ -38,10 +39,10 @@ int main(int argc, char* argv[]){
 	cmd += ("-lmik32_hal -lmik32_shared ");
 	cmd += ("// " + compileFlags + " // ");
 	cmd += ("/// " + linkFlags + " /// ");
-	if(!exists(Compilers[0]) || !exists(Compilers[1]))
-		cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ ");
+	if(!exists(Compilers[0]) || !exists(Compilers[1]) || !exists(Compilers[3]))
+		cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ --ASM riscv-none-elf-as");
 	else
-		cmd += ("--CC " + Compilers[0] + " --CXX " + Compilers[1] + " ");
+		cmd += ("--CC " + Compilers[0] + " --CXX " + Compilers[1] + " --ASM " + Compilers[3] + " ");
 	if(getExt(parameters[0]) == "cpp") cmd += (Cppstandart + " ");
 	else cmd += (Cstandart + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;

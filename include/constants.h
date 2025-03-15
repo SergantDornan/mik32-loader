@@ -10,8 +10,9 @@ const std::vector<std::string> IncFolders = {root + "/hardware/mik32-hal/core/In
 root + "/hardware/mik32-hal/peripherals/Include", root + "/hardware/mik32-hal/utilities/Include",
 root + "/hardware/mik32v2-shared/include", root + "/hardware/mik32v2-shared/libs",
 root + "/hardware/mik32v2-shared/periphery", root + "/CompiledLibs"};
-const std::vector<std::string> possibleFlags = {"-b", "-p"}; 
+const std::vector<std::string> possibleFlags = {"-b", "-p", "--CC", "--CXX", "--ASM"}; 
 const std::vector<std::string> Compilers = {
 	getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-gcc",
 	getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-g++",
-	getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-objcopy"};
+	getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-objcopy",
+	getHomedir() + "/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-as"};
