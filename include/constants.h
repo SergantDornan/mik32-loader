@@ -8,7 +8,7 @@ const std::string Cppstandart = "-std=gnu++17";
 const std::string picocomFlags = "--omap crcrlf --echo";
 const std::vector<std::string> IncFolders = {root + "/hardware/mik32-hal/core/Include",
 root + "/hardware/mik32-hal/peripherals/Include", root + "/hardware/mik32-hal/utilities/Include",
-root + "/hardware/mik32v2-shared/include", root + "/hardware/mik32v2-shared/libs",
+root + "/hardware/mik32v2-shared/include", root + "/hardware/mik32v2-shared/libs/include",
 root + "/hardware/mik32v2-shared/periphery", root + "/CompiledLibs"};
 const std::vector<std::string> possibleFlags = {"-b", "-p", "--CC", "--CXX", "--ASM"}; 
 const std::vector<std::string> Compilers = {
