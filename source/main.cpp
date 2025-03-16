@@ -37,14 +37,14 @@ int main(int argc, char* argv[]){
 	for(int i = 0; i < IncFolders.size(); ++i)
 		cmd += ("-I" + IncFolders[i] + " ");
 	cmd += ("-lmik32_hal -lmik32_shared ");
-	cmd += ("// " + compileFlags + " // ");
-	cmd += ("/// " + linkFlags + " /// ");
 	if(!exists(Compilers[0]) || !exists(Compilers[1]) || !exists(Compilers[3]))
-		cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ --ASM riscv-none-elf-as");
+		cmd += ("--CC riscv-none-elf-gcc --CXX riscv-none-elf-g++ --preproc riscv-none-elf-cpp ");
 	else
-		cmd += ("--CC " + Compilers[0] + " --CXX " + Compilers[1] + " --ASM " + Compilers[3] + " ");
+		cmd += ("--CC " + Compilers[0] + " --CXX " + Compilers[1] + " --preproc " + Compilers[3] + " ");
 	if(getExt(parameters[0]) == "cpp") cmd += (Cppstandart + " ");
 	else cmd += (Cstandart + " ");
+	cmd += ("--compile-flags " + compileFlags + " ");
+	cmd += ("--link-flags " + linkFlags + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;
 	int beldercode = (system(cmd.c_str()) / 256);
 	if(!exists(elfFile))

@@ -68,9 +68,12 @@ std::string createEssentials(const bool reb){
 		}
 	}
 	if(isDir && reb){
-		std::string cmd = "rm -rf " + root + "/" + index;
-		system(cmd.c_str());
-		cmd = "mkdir " + root + "/" + index;
+		std::string cmd = "rm -rf ";
+		auto dirs = getDirs(root + "/" + index);
+		for(int i = 1; i < dirs.size(); ++i){
+			if(getName(dirs[i]) != "config")
+				cmd += (dirs[i] + " ");
+		}
 		system(cmd.c_str());
 	}
 	else if(!isDir){
