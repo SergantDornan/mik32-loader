@@ -28,10 +28,9 @@ int main(int argc, char* argv[]){
 	std::string hexFile = wd + "/" + hexFileName;
 	std::string cmd = getHomedir() + "/builder/builder ";
 	for(int i = 0; i < args.size(); ++i){
-		if(find(possibleFlags, args[i]) == -1){
-			if(isFlag(args[i]) || (i > 0 && find(possibleFlags,args[i-1]) == -1))
+		if(find(possibleFlags, args[i]) == -1)
+			if(i == 0 || find(possibleFlags, args[i-1]) == -1)
 				cmd += (args[i] + " ");
-		}
 	}
 	cmd += ("-o " + elfFile + " ");
 	for(int i = 0; i < IncFolders.size(); ++i)
