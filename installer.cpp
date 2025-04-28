@@ -101,13 +101,13 @@ int main(int argc, char* argv[]) {
     cmd = "cp libmik32_shared.a " + root + "/CompiledLibs";
     system(cmd.c_str());
     rewriteLine(cd + "/Makefile","OUTPUT=",
-        std::string("OUTPUT=" + root + "/mik32Loader"));
+        std::string("OUTPUT=" + root + "/loader"));
     rewriteLine(cd + "/source/main.cpp","const std::string SourceCode;",
         std::string("const std::string SourceCode = \"" + cd + "\";"));
     addAlias("mik32Load", root + "/loader");
     cmd = "make -C "+ cd + " -j " + std::to_string(numThreads);
     system(cmd.c_str());
-    rewriteLine(cd + "/Makefile",std::string("OUTPUT=" + root + "/mik32Loader"),
+    rewriteLine(cd + "/Makefile",std::string("OUTPUT=" + root + "/loader"),
         "OUTPUT=");
     rewriteLine(cd + "/source/main.cpp",std::string("const std::string SourceCode = \"" + cd + "\";"),
         "const std::string SourceCode;");

@@ -17,7 +17,7 @@ std::string findFile(const std::string& name, const std::string& dir){
 	}
 	return "-1";
 }
-std::vector<std::string> getParameters(const std::vector<std::string>& args,
+std::vector<std::string> getParameters(std::vector<std::string>& args,
 	const std::string& path, const std::string& cd){
 
 	std::vector<std::string> parameters;
