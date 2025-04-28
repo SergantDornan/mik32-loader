@@ -8,3 +8,4 @@ void findEntryFile(const std::vector<std::string>&, std::string&,
 	const std::string&);
 void getNameAfterFlag(const std::vector<std::string>&,
 	const std::string&,std::string&);
+void findLinkingScript(std::vector<std::string>&,std::string&);
