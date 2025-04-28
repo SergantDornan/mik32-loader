@@ -13,6 +13,11 @@ make install # установка
 ```
 mik32Load uninstall # удалить mik32Loader
 ```
+
+```
+mik32Load reinstall # переустановить mik32Loader
+```
+
 # mik32Load
 mik32Loader можно вызвать из любой директории
 
@@ -30,6 +35,8 @@ mik32Load read # запуск picocom
 
 -b [число] явно указать SERIAL_BOUDRATE для picocom
 
--p [число] указать номер USB порта для picocom 
+-p [число] указать номер USB порта для picocom
+
+-T[линковочный скрипт] указать один из стандартных линковочных скриптов 
 
 Любой флаг не указаный выше (кроме "-o, --CC, --CXX") будет передан как аргумент программе C-CPP-builder: https://github.com/SergantDornan/C-Cpp-builder

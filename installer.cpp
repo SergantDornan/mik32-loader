@@ -2,6 +2,34 @@
 #include "uninstall.h"
 #include "alias.h"
 #include <thread>
+void rewriteLine(const std::string& path, 
+    const std::string& oldLine, const std::string& newLine)
+{
+    std::vector<std::string> lines;
+    std::string line;
+    std::ifstream input(path);
+    if(!input.is_open()){
+        std::cout << "================= ERROR =================" << std::endl;
+        std::cout << "installer.cpp: rewriteLine: cannot open file: " << std::endl;
+        std::cout << path << std::endl;
+        std::cout << "=========================================" << std::endl;
+        return;
+    }
+    while(std::getline(input, line))
+        lines.push_back(line);
+    input.close();
+    for(int i = 0; i < lines.size(); ++i){
+        if(lines[i] == oldLine){
+            lines[i] = newLine;
+            break;
+        }
+    }
+    std::ofstream out(path);
+    for(int i = 0; i < lines.size(); ++i)
+        out << lines[i] << std::endl;
+    out.close();
+}
+
 const size_t numThreads = std::thread::hardware_concurrency();
 bool checkProgram(const std::string& programName) {
     std::string command = "which " + programName + " > /dev/null 2>&1";
@@ -72,26 +100,17 @@ int main(int argc, char* argv[]) {
     system(cmd.c_str());
     cmd = "cp libmik32_shared.a " + root + "/CompiledLibs";
     system(cmd.c_str());
-    std::ifstream makefile(cd + "/Makefile");
-    std::vector<std::string> lines;
-    std::string line;
-    std::getline(makefile,line);
-    lines.push_back(line);
-    if(line != std::string("OUTPUT=" + root + "/loader")){
-        while(std::getline(makefile, line))
-            lines.push_back(line);
-        lines[0] = "OUTPUT=" + root + "/loader";
-    }
-    makefile.close();
-    if(lines.size() > 1){
-        std::ofstream out(cd + "/Makefile");
-        for(int i = 0; i < lines.size(); ++i)
-            out << lines[i] << std::endl;
-        out.close();
-    }
+    rewriteLine(cd + "/Makefile","OUTPUT=",
+        std::string("OUTPUT=" + root + "/mik32Loader"));
+    rewriteLine(cd + "/source/main.cpp","const std::string SourceCode;",
+        std::string("const std::string SourceCode = \"" + cd + "\";"));
     addAlias("mik32Load", root + "/loader");
-    cmd = "make -C "+cd+" -j " + std::to_string(numThreads);
+    cmd = "make -C "+ cd + " -j " + std::to_string(numThreads);
     system(cmd.c_str());
+    rewriteLine(cd + "/Makefile",std::string("OUTPUT=" + root + "/mik32Loader"),
+        "OUTPUT=");
+    rewriteLine(cd + "/source/main.cpp",std::string("const std::string SourceCode = \"" + cd + "\";"),
+        "const std::string SourceCode;");
     if(exists(root + "/loader"))
         std::cout << "================= mik32Loader has been installed =================" << std::endl;
     return 0;

@@ -1,4 +1,4 @@
-OUTPUT=/home/sergantdornan/mik32Loader/loader
+OUTPUT=
 INSTALLOUTPUT=./installer
 INCDIR=./include
 SOURCEDIR=./source

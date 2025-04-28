@@ -25,10 +25,24 @@ std::vector<std::string> getParameters(const std::vector<std::string>& args,
 	std::string line;
 	while(std::getline(in, line)) parameters.push_back(line);
 	in.close();
+	findLinkingScript(args,parameters[3]);
 	findEntryFile(args,parameters[0],cd);
 	getNameAfterFlag(args, "-b", parameters[1]);
 	getNameAfterFlag(args,"-p",parameters[2]);
 	return parameters;
+}
+void findLinkingScript(std::vector<std::string>& args,std::string& s){
+	auto it = args.begin();
+	while(it != args.end()){
+		if((*it).size() >= 2 && (*it)[0] == '-' && 
+			(*it)[1] == 'T')
+		{
+			s = std::string((*it).begin() + 2, (*it).end());
+			args.erase(it);
+			return;
+		}
+		it++;
+	}
 }
 void getIdirs(const std::vector<std::string>& args, std::string& s){
 	std::vector<std::string> AddInc;

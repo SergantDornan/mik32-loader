@@ -4,16 +4,25 @@
 #include "uninstall.h"
 
 
+const std::string SourceCode;
+
 // config file for project:
 // entry file
 // SERIAL_BOUDRATE
 // USB port for picocom
+// ld script
 int main(int argc, char* argv[]){
 	std::vector<std::string> args;
 	for(int i = 1; i < argc; ++i)
 		args.push_back(std::string(argv[i]));
 	if(argc > 1 && std::string(argv[1]) == "uninstall"){
 		uninstall();
+		return 0;
+	}
+	if(argc > 1 && std::string(argv[1]) == "reinstall"){
+		uninstall();
+		std::string cmd = "make -C " + SourceCode;
+		system(cmd.c_str());
 		return 0;
 	}
 	bool rebuild = (find(args, "-reb") != -1 || find(args, "--rebuild") != -1);
@@ -28,9 +37,10 @@ int main(int argc, char* argv[]){
 	std::string hexFile = wd + "/" + hexFileName;
 	std::string cmd = getHomedir() + "/builder/builder ";
 	for(int i = 0; i < args.size(); ++i){
-		if(find(possibleFlags, args[i]) == -1)
+		if(find(possibleFlags, args[i]) == -1){
 			if(i == 0 || find(possibleFlags, args[i-1]) == -1)
 				cmd += (args[i] + " ");
+		}
 	}
 	cmd += ("-o " + elfFile + " ");
 	for(int i = 0; i < IncFolders.size(); ++i)
@@ -44,6 +54,7 @@ int main(int argc, char* argv[]){
 	else cmd += (Cstandart + " ");
 	cmd += ("--compile-flags " + compileFlags + " ");
 	cmd += ("--link-flags " + linkFlags + " ");
+	cmd += ("-Wl,-T" + parameters[3] + " ");
 	std::cout << "========================== Launching belder ==========================" << std::endl;
 	int beldercode = (system(cmd.c_str()) / 256);
 	if(!exists(elfFile))

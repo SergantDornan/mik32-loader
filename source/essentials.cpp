@@ -100,8 +100,10 @@ std::string createEssentials(const bool reb){
 		rebuild = true;
 	if(rebuild){
 		for(int i = 1; i < inDir.size(); ++i){
-			std::string cmd = "rm -rf " + inDir[i];
-			system(cmd.c_str());
+			if(getName(inDir[i]) != "config"){
+				std::string cmd = "rm -rf " + inDir[i];
+				system(cmd.c_str());
+			}
 		}
 		for(int i = 0; i < reqFolders.size(); ++i){
 			std::string cmd = "mkdir " + folder + "/" + reqFolders[i];
@@ -112,6 +114,7 @@ std::string createEssentials(const bool reb){
 		out << "-1" << std::endl;
 		out << "115200" << std::endl;
 		out << "0" << std::endl;
+		out << "eeprom.ld" << std::endl;
 		out.close();
 		system(cmd.c_str());
 	}
